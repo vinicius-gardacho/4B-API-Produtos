@@ -24,4 +24,14 @@ class ProdutoService
             ]);
         }
     }
+
+    public function update(Produto $produto, array $dados)
+    {
+        if (isset($dados['preco']) && isset($dados['preco_custo'])) {
+            $this->verificarMargem($dados['preco'], $dados['preco_custo']);
+        }
+
+        $produto->update($dados);
+        return $produto;
+    }
 }
