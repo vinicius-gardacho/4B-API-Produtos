@@ -22,4 +22,16 @@ class ProdutoTest extends TestCase
         $this->assertDatabaseHas('produtos', [
             'nome' => 'Lajota']);
     }
+
+    public function test_nao_cria_produto_com_preco_invalido(): void
+    {
+        $this->postJson('/api/produtos',[
+            'nome' => 'Lajota',
+            'preco_custo' => 100,
+            'preco' => 100,
+        ])->assertStatus(422);
+
+        $this->assertDatabaseMissing('produtos', [
+            'nome' => 'Lajota']);
+    }
 }
