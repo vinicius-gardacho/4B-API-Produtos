@@ -11,6 +11,9 @@ class ProdutoTest extends TestCase
     /**
      * A basic feature test example.
      */
+
+    use RefreshDatabase;
+
     public function test_cria_produto_com_sucesso(): void
     {
         $this->postJson('/api/produtos',[
