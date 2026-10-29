@@ -11,6 +11,22 @@ class EloquentProdutoRepository implements ProdutoRepositoryInterface
     {
         return Produto::create($dados);
     }
+
+    // ATIVIDADE: Crie mais 2 filtros para a função de search do ProdutoRepository.
+    public function search(array $filters = [], int $porPagina = 10): LengthAwarePaginator
+    {
+        return Produto::query()
+                ->when($filters['search'] ?? null, 
+                fn ($query, $pedaco) => $query -> where('nome', 'LIKE', "%{$pedaco}%"))
+                ->when($filters['preco_min'] ?? null, 
+                fn ($query, $preco) => $query -> where('preco', '>=', $preco))
+                ->when($filters['preco_max'] ?? null, 
+                fn ($query, $preco) => $query -> where('preco', '<=', $preco))
+                ->paginate($porPagina);
+    }
+
+    //ATIVIDADE: Crie os outros métodos do ProdutoRepository (update, delete)
+    
     public function update(Produto $produto, array $dados): Produto
     {
         $produto->update($dados);
@@ -20,11 +36,5 @@ class EloquentProdutoRepository implements ProdutoRepositoryInterface
     {
         $produto->delete();
     }
-    public function search(array $filters = [], int $porPagina = 10): LengthAwarePaginator
-    {
-        return Produto::query()
-                ->when($filters['search'] ?? null, 
-                fn ($query, $pedaco) => $query -> where('nome', 'LIKE', "%{$pedaco}%"))
-                ->paginate($porPagina);
-    }
+
 }
